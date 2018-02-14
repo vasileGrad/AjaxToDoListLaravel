@@ -28,6 +28,10 @@ class ListController extends Controller
     }
 
     public function update(Request $request) {
+    	$this->validate($request, array(
+            // rules 
+            'value'         => 'required|min:3|max:255'
+        ));
     	$item = Item::find($request->id);
     	$item->item = $request->value;
     	$item->save();
