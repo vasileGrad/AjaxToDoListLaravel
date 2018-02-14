@@ -20,3 +20,7 @@ Route::post('list', 'ListController@create');
 Route::post('delete', 'ListController@delete');
 Route::post('update', 'ListController@update');
 
+Route::post('list2', 'ListController@create2');
+Route::post('delete2', 'ListController@delete2');
+Route::post('update2', 'ListController@update2');
+

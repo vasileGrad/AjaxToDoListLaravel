@@ -28,6 +28,23 @@
 				  	</div>
 				</div>
 			</div>
+
+			<div class="col-lg-offset-3 col-lg-6">
+				<div class="panel panel-default">
+				  	<div class="panel-heading">
+				    	<h3 class="panel-title">Ajax List 2<a href="#" id="addNew2" class="pull-right"  data-toggle="modal" data-target="#myModal2"><button class="btn btn-default btn-xs"><i class="glyphicon glyphicon-plus glyphicon-lg"> Add</i></button></a></h3>
+				  	</div>
+				  	<div class="panel-body" id="items2">
+				    	<ul class="list-group">
+				    	@foreach($items2 as $item)
+				    	  	<li class="list-group-item ourItem2">{{$item->item}}<a href="#" class="pull-right editNew2" data-toggle="modal" data-target="#myModal2"><input type="hidden" id="itemId2" value="{{$item->id}}"><i class="glyphicon glyphicon-edit fa-lg"></i></a>
+				    	  	</li>
+				    	@endforeach
+				    	</ul>
+				  	</div>
+				</div>
+			</div>
+
 			<!-- Modal -->
 			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			  <div class="modal-dialog" role="document">
@@ -43,7 +60,29 @@
 			      <div class="modal-footer">
 			        <button type="button" class="btn btn-warning" id="delete" data-dismiss="modal" style="display: none">Delete</button>
 			        <button type="button" class="btn btn-primary" id="saveChanges" data-dismiss="modal"style="display: none">Save changes</button>
-			        <button type="button" class="btn btn-primary" id="addButton"  data-dismiss="modal">Add Item</button>
+			        <button type="button" class="btn btn-primary" id="addButton" data-dismiss="modal">Add Item</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+
+			<!-- Modal2 -->
+			<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="title2">Add New Item 2</h4>
+			      </div>
+			      <div class="modal-body">
+			      	<input type="hidden" id="id2">
+			        <p><input type="text" placeholder="Write Item Here 2" id="addItem2" class="form-control"></p>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-warning" id="delete2" data-dismiss="modal" style="display: none">Delete</button>
+			        <button type="button" class="btn btn-primary" id="saveChanges2" data-dismiss="modal"style="display: none">Save changes</button>
+			        <button type="button" class="btn btn-primary" id="addButton2" data-dismiss="modal">Add Item</button>
 			      </div>
 			    </div>
 			  </div>
@@ -119,6 +158,65 @@
 				}
 			});
 		});
+
+		$(document).ready(function() {
+			$(document).on('click', '.ourItem2', function(event) {
+				var text2 = $(this).text();
+				var id2 = $(this).find('#itemId2').val();
+				$('#title2').text('Edit Item 2');
+				var text2 = $.trim(text2);
+				$('#addItem2').val(text2);
+				$('#delete2').show('400');
+				$('#saveChanges2').show('400');
+				$('#addButton2').hide('400');
+				$('#id2').val(id2);
+				console.log(text2);
+			});
+
+			$(document).on('click', '#addNew2', function(event) {
+				$('#title2').text('Add New Item 2');
+				$('#addItem2').val("");
+				$('#delete2').hide('400');
+				$('#saveChanges2').hide('400');
+				$('#addButton2').show('400');
+			});
+
+			$('#addButton2').click(function(event) {
+				var text2 = $('#addItem2').val();
+				if (text2 =="") {
+					alert('Please type anything for item');
+				}else{
+					$.post("list2", {'text2': text2, '_token': $('input[name="_token"]').val()}, function(data2) { // data - we are getting from the Controller
+						console.log(data2);
+						$('#items2').load(location.href + ' #items2');  //refresh the page
+					});
+				}
+			});
+
+			$('#delete2').click(function(event) {
+				var id2 = $("#id2").val();
+				$.post('delete2', {'id': id2, '_token': $('input[name="_token"]').val()}, function(data){
+				$('#items2').load(location.href + ' #items2');  //refresh the page
+				//console.log(id);
+				console.log(data);
+				});
+			});
+
+			$('#saveChanges2').click(function(event) {
+				var id2 = $("#id2").val();
+				var value2 = $("#addItem2").val();
+				if (value2 =="") {
+					alert('Please type anything for item');
+				}else{
+					$.post('update2', {'id': id2,'value2': value2, '_token': $('input[name="_token"]').val()}, function(data){
+					$('#items2').load(location.href + ' #items2');  //refresh the page
+					//console.log(id);
+					console.log(data);
+					});
+				}
+			});
+		});
+
 	</script>
 </body>
 </html>
